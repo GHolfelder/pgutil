@@ -40,6 +40,10 @@ To expose the docs via GitHub Pages:
 2. The action will generate or update the `docs/` directory on `main`.
 3. In the GitHub repository settings -> Pages, set the source to the `main` branch and the folder to `/docs` and save. The site URL will be shown there.
 
+Fallback behavior
+
+If the action cannot push generated docs into `main` (for example, due to branch protection), the workflow will automatically fall back to deploying the generated HTML to the `gh-pages` branch. This keeps the docs available while respecting protected-branch rules.
+
 Local generation helper
 
 You can also generate docs locally using the included PowerShell script:
