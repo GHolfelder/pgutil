@@ -1,5 +1,8 @@
 name: Build and deploy docs (gh-pages)
 
+permissions:
+  contents: write
+
 on:
   push:
     branches: [ main ]
@@ -24,8 +27,16 @@ jobs:
           deno doc --html --output=./docs src/Schema.ts
           echo "Generated files:" && ls -la ./docs || true
 
+      - name: Git diagnostics
+        run: |
+          git --version
+          git status --porcelain || true
+          echo "origin URL:" && git remote get-url origin || true
+          echo "refs:" && git show-ref || true
+
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Use a personal access token if provided (optional). Otherwise fall back to GITHUB_TOKEN.
+          personal_token: ${{ secrets.GH_PAGES_PAT || secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
